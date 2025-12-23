@@ -38,7 +38,7 @@
             left: 0;
         }
 
-        /* --- BOX TITOLO + LEGENDA --- */
+        /* --- BOX TITOLO + LEGENDA (Pannello Principale) --- */
         .info-panel {
             position: absolute;
             top: 100px; 
@@ -49,6 +49,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             z-index: 10;
             max-width: 480px; 
+            transition: opacity 0.3s ease;
         }
         
         .info-panel h1 {
@@ -57,7 +58,23 @@
             margin: 0 0 10px 0; 
             font-weight: 700;
             line-height: 1.3;
+            padding-right: 15px; /* Spazio per la X */
         }
+
+        /* Pulsante "X" per chiudere il pannello */
+        .close-panel-btn {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #95a5a6;
+            cursor: pointer;
+            padding: 2px;
+            line-height: 1;
+        }
+        .close-panel-btn:hover { color: #c0392b; }
 
         /* Legenda Orizzontale */
         .legend-grid {
@@ -86,15 +103,14 @@
         }
 
         /* --- COLORI DEFINITIVI --- */
-        .color-1 { background-color: #CE1256; } /* 5-10 min */
-        .color-2 { background-color: #DF65B0; } /* 10-15 min */
-        .color-3 { background-color: #D7B5D8; } /* 15-20 min */
-        .color-4 { background-color: #F1EEF6; border: 1px solid #ccc; } /* Oltre 20 min (bordo aggiunto per visibilità) */
+        .color-1 { background-color: #CE1256; } 
+        .color-2 { background-color: #DF65B0; } 
+        .color-3 { background-color: #D7B5D8; } 
+        .color-4 { background-color: #F1EEF6; border: 1px solid #ccc; } 
 
-        /* --- PULSANTI LATERALI (Info e Stats) --- */
+        /* --- PULSANTI ROTONDI --- */
         .round-btn {
             position: absolute;
-            right: 20px;
             width: 40px;
             height: 40px;
             background-color: white;
@@ -104,7 +120,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
             z-index: 100;
-            display: flex;
+            display: flex; 
             justify-content: center;
             align-items: center;
             font-size: 1.2rem;
@@ -116,9 +132,16 @@
             background-color: #f8f9fa;
         }
 
-        /* Posizioni specifiche */
-        .btn-info { top: 20px; }
-        .btn-stats { top: 70px; } /* Subito sotto */
+        /* Posizioni specifiche Pulsanti Destra */
+        .btn-info { top: 20px; right: 20px; }
+        .btn-stats { top: 70px; right: 20px; }
+
+        /* Posizione Pulsante RIAPERTURA MENU (Sinistra) */
+        .btn-reopen { 
+            top: 20px; 
+            left: 20px; 
+            display: none; 
+        }
 
         /* --- PULSANTE FANTASMA (LAYER) - Basso a Destra --- */
         .ghost-button-wrapper {
@@ -175,30 +198,13 @@
             text-align: center;
             position: relative;
             max-height: 90vh;
-            overflow-y: auto; /* Scroll se il contenuto è lungo */
+            overflow-y: auto; 
         }
 
-        .modal-content h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .modal-content h3 {
-            color: #e74c3c;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
+        .modal-content h2 { color: #2c3e50; margin-bottom: 20px; font-size: 1.5rem; }
+        .modal-content h3 { color: #e74c3c; margin-bottom: 15px; font-size: 1.1rem; }
+        .modal-content p { color: #444; line-height: 1.6; margin-bottom: 20px; font-size: 0.95rem; text-align: left; }
 
-        .modal-content p {
-            color: #444;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            text-align: left;
-        }
-
-        /* Stile specifico per la lista statistiche */
         .stats-list {
             list-style: none;
             text-align: left;
@@ -225,7 +231,6 @@
             border-radius: 8px;
             border-left: 4px solid #e74c3c;
         }
-        
         .credits-list strong { color: #333; }
 
         .close-btn {
@@ -240,12 +245,10 @@
             transition: background 0.2s;
             margin-top: 15px;
         }
-
         .close-btn:hover { background-color: #1a252f; }
         .btn-start { background-color: #e74c3c; }
         .btn-start:hover { background-color: #c0392b; }
 
-        /* Contenitore Grafico */
         .chart-container {
             position: relative;
             height: 250px;
@@ -255,14 +258,32 @@
             margin-bottom: 10px;
         }
 
-        /* --- MOBILE --- */
+        /* --- MEDIA QUERY MOBILE (Il trucco per risolvere l'overlap) --- */
         @media (max-width: 768px) {
             .info-panel {
                 top: 80px; 
                 left: 10px;
-                right: 10px;
-                max-width: none;
+                /* Non usiamo width 50%, ma diciamo: prendi tutto lo spazio MENO 70px a destra
+                   In questo modo il box si ferma PRIMA di toccare i pulsanti tondi */
+                max-width: calc(100% - 70px);
+                padding: 12px 15px;
             }
+            
+            .info-panel h1 {
+                /* Font ridotto come richiesto */
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+
+            .legend-grid {
+                gap: 10px;
+            }
+            
+            .legend-item {
+                /* Legenda più piccola */
+                font-size: 0.75rem;
+            }
+
             .ghost-button-wrapper {
                 bottom: 30px; 
                 right: 15px;
@@ -276,7 +297,9 @@
         <iframe src="https://pinea.app.carto.com/map/98249c1d-84dd-4448-b163-d7e89c40455b" title="Mappa CARTO"></iframe>
     </div>
 
-    <div class="info-panel">
+    <div class="info-panel" id="mainInfoPanel">
+        <button class="close-panel-btn" onclick="togglePanel(false)" title="Chiudi pannello">&times;</button>
+        
         <h1>Accessibilità al soccorso sanitario in Piemonte</h1>
         
         <div class="legend-grid">
@@ -286,6 +309,10 @@
             <div class="legend-item"><span class="dot color-4"></span> Oltre 20 minuti</div>
         </div>
     </div>
+
+    <button class="round-btn btn-reopen" id="reopenPanelBtn" onclick="togglePanel(true)" title="Mostra Legenda">
+        <i class="fas fa-list"></i>
+    </button>
 
     <button class="round-btn btn-info" onclick="openModal('creditsModal')" title="Credits">
         <i class="fas fa-info"></i>
@@ -338,36 +365,35 @@
             <p style="text-align: center; font-size: 0.9rem; color: #666; margin-bottom: 10px;">
                 Distribuzione della popolazione in base al tempo di arrivo dei soccorsi.
             </p>
-            
             <div class="chart-container">
                 <canvas id="popChart"></canvas>
             </div>
-
             <ul class="stats-list">
-                <li>
-                    <span><span class="dot color-1"></span> 5-10 minuti</span>
-                    <strong>2.714.379 ab.</strong>
-                </li>
-                <li>
-                    <span><span class="dot color-2"></span> 10-15 minuti</span>
-                    <strong>1.050.306 ab.</strong>
-                </li>
-                <li>
-                    <span><span class="dot color-3"></span> 15-20 minuti</span>
-                    <strong>371.732 ab.</strong>
-                </li>
-                <li>
-                    <span><span class="dot color-4"></span> Oltre 20 minuti</span>
-                    <strong>124.848 ab.</strong>
-                </li>
+                <li><span><span class="dot color-1"></span> 5-10 minuti</span><strong>2.714.379 ab.</strong></li>
+                <li><span><span class="dot color-2"></span> 10-15 minuti</span><strong>1.050.306 ab.</strong></li>
+                <li><span><span class="dot color-3"></span> 15-20 minuti</span><strong>371.732 ab.</strong></li>
+                <li><span><span class="dot color-4"></span> Oltre 20 minuti</span><strong>124.848 ab.</strong></li>
             </ul>
-
             <button class="close-btn" onclick="closeModal('statsModal')">Chiudi</button>
         </div>
     </div>
 
     <script>
-        // --- GESTIONE POPUP ---
+        // --- GESTIONE VISIBILITÀ PANNELLO TITOLO ---
+        function togglePanel(show) {
+            const panel = document.getElementById('mainInfoPanel');
+            const reopenBtn = document.getElementById('reopenPanelBtn');
+            
+            if (show) {
+                panel.style.display = 'block';
+                reopenBtn.style.display = 'none';
+            } else {
+                panel.style.display = 'none';
+                reopenBtn.style.display = 'flex';
+            }
+        }
+
+        // --- GESTIONE POPUP MODALI ---
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
@@ -377,28 +403,16 @@
         }
 
         // --- CREAZIONE GRAFICO ---
-        // Attende che il documento sia caricato
         document.addEventListener("DOMContentLoaded", function() {
             const ctx = document.getElementById('popChart').getContext('2d');
-            
             new Chart(ctx, {
-                type: 'doughnut', // Ciambella (o 'pie' per torta piena)
+                type: 'doughnut',
                 data: {
                     labels: ['5-10 min', '10-15 min', '15-20 min', '> 20 min'],
                     datasets: [{
                         data: [2714379, 1050306, 371732, 124848],
-                        backgroundColor: [
-                            '#CE1256', // Colore 1
-                            '#DF65B0', // Colore 2
-                            '#D7B5D8', // Colore 3
-                            '#F1EEF6'  // Colore 4
-                        ],
-                        borderColor: [
-                            'transparent',
-                            'transparent',
-                            'transparent',
-                            '#cccccc'  // Bordo grigio solo per il colore chiarissimo
-                        ],
+                        backgroundColor: ['#CE1256', '#DF65B0', '#D7B5D8', '#F1EEF6'],
+                        borderColor: ['transparent', 'transparent', 'transparent', '#cccccc'],
                         borderWidth: 1
                     }]
                 },
@@ -406,18 +420,13 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false // Nascondo la legenda del grafico perché c'è già quella sotto
-                        },
+                        legend: { display: false },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
                                     let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
+                                    if (label) label += ': ';
                                     let value = context.raw;
-                                    // Calcolo percentuale
                                     let sum = 2714379 + 1050306 + 371732 + 124848;
                                     let percentage = (value * 100 / sum).toFixed(1) + "%";
                                     return label + value.toLocaleString('it-IT') + " (" + percentage + ")";
